@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import {  useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { useDispatch, useSelector } from 'react-redux';
-
+import {loginUser}from '../reducers/authSlice.js'
 const LoginPage = () => {
   const navigate = useNavigate();
 
-  const{loading,error,succes,currentUser, status} = useSelector(  (state) => state.auth);
+  const{loading,error,  errorMessage,succes,currentUser, status} = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
 
@@ -16,7 +16,41 @@ const LoginPage = () => {
   const [mail, setMail] = useState("")
   const [password, setPassword] = useState("");
 
+
+  /* useEffect(() => {
+    operationChecker()
+  }, [mail,password])
+   */
+
+  async function operationChecker() {
+  
+    await dispatch(loginUser({ email: mail, password: password }));
+
+    console.log(status)
+  }
+
   const [eyeOpen , setEyeopen]  = useState(false);
+
+  if (loading) {
+    return (
+      <>
+        <div>Loading ...</div>
+      </>
+    );
+  }
+  
+  if (error) {
+    return (
+      <>
+        <div>There is an error: {errorMessage}</div>
+      </>
+    );
+  }
+
+  if(succes){
+    console.log(succes)
+    navigate("/entrance")
+  }
   return (
     <>
       <div className="flex items-center justify-center min-h-screen bg-slate-400 ">
@@ -54,7 +88,7 @@ const LoginPage = () => {
             Forgot password?
           </div>
 
-          <button className="w-full bg-slate-400 p-2 rounded-md">
+          <button onClick={operationChecker} className="w-full bg-slate-400 p-2 rounded-md">
             Sign in
           </button>
 

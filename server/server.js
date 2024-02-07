@@ -18,12 +18,12 @@ app.use(cookieParser());
 app.use("/api", AuthRoute); // Mount AuthRoute under /api path
 
 // Default route
-app.use("/", (req, res) => {
+/* app.use("/", (req, res) => {
     res.json({
         message: "API is working"
     });
 });
-
+ */
 const PORT = process.env.PORT || 5000;
 
 // Start server
