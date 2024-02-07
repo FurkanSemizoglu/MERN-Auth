@@ -3,9 +3,18 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
+import { useDispatch, useSelector } from 'react-redux';
+
 const LoginPage = () => {
   const navigate = useNavigate();
 
+  const{loading,error,succes,currentUser, status} = useSelector(  (state) => state.auth);
+
+  const dispatch = useDispatch();
+
+
+  const [mail, setMail] = useState("")
+  const [password, setPassword] = useState("");
 
   const [eyeOpen , setEyeopen]  = useState(false);
   return (
@@ -24,6 +33,7 @@ const LoginPage = () => {
               id="name"
               name="name"
               placeholder="@hotmail.com"
+              onChange={(e)=> {setMail(e.target.value)}}
             />
 
             <span>Password</span>
@@ -33,6 +43,7 @@ const LoginPage = () => {
                 type={eyeOpen ? "text" : "password"}
                 id="password"
                 name="password"
+                onChange={(e)=> {setPassword(e.target.value)}}
               />
               <div onClick={() =>{setEyeopen(!eyeOpen)} } className="absolute h-5 w-5  right-3  top-1/2 transform -translate-y-1/2">
                 {eyeOpen ? <FaEye  />:  <FaEyeSlash /> }
