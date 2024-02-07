@@ -5,6 +5,9 @@ import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { useDispatch, useSelector } from 'react-redux';
 import {loginUser}from '../reducers/authSlice.js'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const LoginPage = () => {
   const navigate = useNavigate();
 
@@ -39,13 +42,15 @@ const LoginPage = () => {
     );
   }
   
-  if (error) {
+  /* if (errorMessage) {
+    const notify = () => toast("Wow so easy!");
     return (
       <>
-        <div>There is an error: {errorMessage}</div>
+       
+      
       </>
     );
-  }
+  } */
 
   if(succes){
     console.log(succes)

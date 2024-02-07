@@ -2,6 +2,8 @@ import { BrowserRouter , Routes, Route } from "react-router-dom";
 import SignUpPage from "./pages/SignUpPage.jsx"
 import LoginPage from "./pages/LoginPage.jsx"
 import EntrancePage from "./pages/EntrancePage.jsx"
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
@@ -15,6 +17,7 @@ function App() {
 
       </Routes>
     </BrowserRouter>
+    <ToastContainer />
     </>
   );
 }

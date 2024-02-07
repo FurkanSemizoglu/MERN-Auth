@@ -1,17 +1,22 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '../reducers/authSlice'; // Assuming authSlice file is in the same directory
+import { useNavigate } from 'react-router-dom';
 
 const SignUpPage = () => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  const{loading,error,  errorMessage,succes,currentUser, status} = useSelector((state) => state.auth);
   const handleSignUp = () => {
     // Dispatch registerUser action with email and password
     dispatch(registerUser({ email, password }));
   };
+  const navigate = useNavigate();
 
+  if(succes){
+    navigate("/entrance")
+  }
   return (
     <>
       <div className="flex items-center justify-center min-h-screen bg-slate-400  ">

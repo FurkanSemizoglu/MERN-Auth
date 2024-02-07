@@ -1,16 +1,15 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import axios from 'axios';
-
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const initialState = {
-    currentUser : null,
-    loading : false,
-    error : false,
-    status : "idle",
-    errorMessage : "",   
-    succes : false 
-}
-
+  currentUser: null,
+  loading: false,
+  error: false,
+  status: "idle",
+  errorMessage: null,
+  succes: false,
+};
 
 /* export const registerUser = createAsyncThunk("register", async ({ email, password }) => {
 
@@ -37,11 +36,12 @@ const initialState = {
   }
 }); */
 
-
-export const registerUser = createAsyncThunk("register", async ({ email, password }) => {
-    try {
+export const registerUser = createAsyncThunk(
+  "register",
+  async ({ email, password }) => {
+   /*  try { */
       const data = { email, password };
-      console.log(data)
+      console.log(data);
       const response = await fetch("http://localhost:5000/api/register", {
         method: "POST",
         headers: {
@@ -49,36 +49,40 @@ export const registerUser = createAsyncThunk("register", async ({ email, passwor
         },
         body: JSON.stringify({ email: email, password: password }),
       });
-  
-      console.log(response , "response")
-      if (!response.ok) {
+
+      console.log(response, "response");
+     /*  if (!response.ok) {
         throw new Error("Network response was not ok");
-      }
-  
+      } */
+
       const result = await response.json();
       console.log(result, "result");
       return result;
-    } catch (error) {
+   /*  } catch (error) {
       throw new Error("Registration failed: " + error.message);
-    }
-  });
-  
+    } */
+  }
+);
 
+export const loginUser = createAsyncThunk(
+  "login",
+  async ({ email, password }) => {
+   /*  try { */
+      //  const data = {email , password}
 
-export const loginUser = createAsyncThunk("login" ,async({email , password}) => {
-    try {
-  //  const data = {email , password}
-
-    const requestOptions = {
-        method: 'POST',
+      const requestOptions = {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ email: email, password: password }),
-    };
+      };
 
-    const response = await fetch("http://localhost:5000/api/login", requestOptions);
-   /*  const response = await fetch("http://localhost:5000/api/login", {
+      const response = await fetch(
+        "http://localhost:5000/api/login",
+        requestOptions
+      );
+      /*  const response = await fetch("http://localhost:5000/api/login", {
       method: "POST", 
       headers: {
         "Content-Type": "application/json",
@@ -87,77 +91,100 @@ export const loginUser = createAsyncThunk("login" ,async({email , password}) => 
       body: JSON.stringify(data)
     }) */
 
-    if (!response.ok) {
+      /*  if (!response.ok) {
         console.log("hata kısmıı")
         throw new Error("Network response was not ok");
-    }
+    } */
 
-    const result = await response.json();
-    console.log(result , "result")
-    return result;
-} catch (error) {
-    throw new Error("Login failed: " + error.message);
+      const result = await response.json();
+      console.log(result, "result");
+      return result;
+   /*  } catch (error) {
+      toast(error.response.data.message, {
+        position: "top-right",
+        autoClose: 5000,
+      });
+      throw new Error("Login failed: " + error.message);
+    } */
   }
-} )
-
+);
 
 const authSlice = createSlice({
-    name: "auth",
-    initialState,
-    reducers : {},
-    extraReducers(builder) {
-        builder
-        .addCase(loginUser.pending, (state) => {
-            state.loading = true;
-            state.status = "loading";
-            state.error = null;
-          })
-          .addCase(loginUser.fulfilled, (state, action) => {
-
-             state.loading = false;
-             state.status = "succeeded";
-             state.succes = true; // registration successful
-             state.currentUser = action.payload
-     
-             console.log("action" , action)
-     
-             console.log("action payload " , action.payload)
-     
-        //     state.userToken = action.payload.token;
-           })
-           .addCase(loginUser.rejected, (state, action) => {
-             state.loading = false;
-             state.status = "failed";
-             state.succes = false;
-             state.error = true,
-             state.errorMessage = action.error.message;
-           })
-           .addCase(registerUser.pending, (state) => {
-            state.loading = true;
-            state.status = "loading";
-            state.error = null;
-          })
-          .addCase(registerUser.fulfilled, (state, action) => {
-            state.loading = false;
-            state.status = "succeeded";
-            state.success = true; // registration successful
-            state.currentUser = action.payload;
-    
-            console.log("action", action);
-    
-            console.log("action payload", action.payload);
-    
-            //     state.userToken = action.payload.token;
-          })
-          .addCase(registerUser.rejected, (state, action) => {
-            state.loading = false;
-            state.status = "failed";
-            state.success = false;
-            state.error = true;
-            state.errorMessage = action.error.message;
+  name: "auth",
+  initialState,
+  reducers: {},
+  extraReducers(builder) {
+    builder
+      .addCase(loginUser.pending, (state) => {
+        state.loading = true;
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.status = "succeeded";
+        // registration successful
+        if (action.payload.message) {
+          state.errorMessage = action.payload.message;
+          toast.error(action.payload.message, {
+            position: "top-right",
+            autoClose: 5000,
           });
-    }
-})
+        }
+        if (action.succes) {
+          succes = action.payload.succes;
+        }
+        state.currentUser = action.payload;
+
+        console.log("action", action);
+
+        console.log(action.payload.message);
+        console.log("action payload ", action.payload);
+
+        //     state.userToken = action.payload.token;
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        console.log(action, "login action");
+        state.loading = false;
+        state.status = "failed";
+        state.succes = false;
+        (state.error = true), (state.errorMessage = action.payload);
+      })
+      .addCase(registerUser.pending, (state) => {
+        state.loading = true;
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.status = "succeeded";
+        state.succes = true;
+         // registration successful
+        state.currentUser = action.payload;
+        if (action.payload.message) {
+            state.succes = false;
+            state.errorMessage = action.payload.message;
+            toast.error(action.payload.message, {
+              position: "top-right",
+              autoClose: 5000,
+            });
+        }
+
+        console.log("action", action);
+
+        console.log("action payload", action.payload);
+
+        //     state.userToken = action.payload.token;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.loading = false;
+        state.status = "failed";
+        state.success = false;
+        state.error = true;
+        state.errorMessage = action.error.message;
+      });
+  },
+});
 
 const authReducer = authSlice.reducer;
 
