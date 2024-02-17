@@ -11,7 +11,8 @@ services:
     depends_on:
       - server  
     networks:
-      mern-network  
+      - mern-network  
+
   server:
     build: ./server
     container_name: node_api
@@ -21,16 +22,17 @@ services:
     depends_on:
       - database 
     networks:
-      mern-network    
+      - mern-network    
+
   database:
     image: mongo
     container_name: mongo-db
     ports:
       - "27017:27017"   
     volumes:
-      - C:/Users/furka/mongo-backup:/data/db  
+      - /home/fatih/mongo-backup:/data/db  
     networks:
-      mern-network  
+      - mern-network  
 
 networks:
   mern-network:
