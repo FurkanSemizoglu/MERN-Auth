@@ -23,5 +23,9 @@ This project is a demonstration of implementing authentication using the MERN (M
 - Tailwind CSS: A utility-first CSS framework for creating custom designs without writing CSS.
 
 
+## Screenshot
+
+![Screenshot](https://raw.githubusercontent.com/FurkanSemizoglu/MERN-Auth/main/screenshot.png)
+
 
 
